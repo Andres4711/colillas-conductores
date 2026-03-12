@@ -50,7 +50,7 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
     
     # LOGO
 
-    c.drawImage("logo.png", 50, 720, width=250, height=120)
+    c.drawImage("logo.png", 30, 640, width=200, height=95)
 
     y = 750
 
@@ -171,4 +171,5 @@ def index():
 if __name__ == "__main__":
 
     app.run()
+
 
