@@ -109,7 +109,6 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
     return buffer
 
 
-# RUTA PRINCIPAL (ESTA ERA LA QUE FALTABA)
 @app.route("/", methods=["GET", "POST"])
 def index():
 
@@ -117,7 +116,12 @@ def index():
 
         nombre = request.form["nombre"]
         id = int(request.form["id"])
-        efectivo = float(request.form["efectivo"])
+        efectivo_texto = request.form["efectivo"]
+
+        # separar números cuando hay +
+        valores = efectivo_texto.split("+")
+
+        efectivo = sum(float(v.strip()) for v in valores)
         operativos = float(request.form["operativos"])
         comision = float(request.form["comision"])
 
@@ -165,4 +169,5 @@ def index():
 
 
 if __name__ == "__main__":
+
     app.run()
