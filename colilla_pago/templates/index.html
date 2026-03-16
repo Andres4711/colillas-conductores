@@ -1,124 +1,128 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html>
 <head>
-
-<meta charset="UTF-8">
-<title>Colillas Conductores</title>
+<title>Colilla de pago conductores</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<style>
+
+body{
+background:#f4f4f4;
+}
+
+.container{
+margin-top:40px;
+max-width:700px;
+}
+
+.card{
+box-shadow:0px 4px 10px rgba(0,0,0,0.1);
+}
+
+</style>
+
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
+<div class="container">
 
-<div class="card shadow">
+<div class="card">
 
 <div class="card-header bg-dark text-white">
-<h3>Colilla de pago conductores</h3>
+<h4>Colilla de pago conductores</h4>
 </div>
 
 <div class="card-body">
 
-<form method="post">
+<form method="POST">
 
-<div class="row">
+<div class="row mb-3">
 
-<div class="col-md-6">
+<div class="col">
 <label>Nombre</label>
-<input name="nombre" class="form-control" required>
+<input type="text" name="nombre" class="form-control" required>
 </div>
 
-<div class="col-md-6">
+<div class="col">
 <label>ID</label>
-<input name="id" type="number" class="form-control" required>
+<input type="number" name="id" class="form-control" required>
 </div>
 
 </div>
 
-<br>
-
+<div class="mb-3">
 <label>Efectivo producido (puedes sumar semanas)</label>
-<input name="efectivo" type="text" class="form-control" placeholder="Ej: 582500 + 490000">
+<input type="text" name="efectivo" class="form-control" placeholder="Ej: 582500 + 490000">
+</div>
 
-<br>
-
+<div class="mb-3">
 <label>Entrega del conductor</label>
-<input name="entrega" type="number" class="form-control">
+<input type="number" name="entrega" class="form-control">
+</div>
 
-<br>
+<div class="row mb-3">
 
-<div class="row">
-
-<div class="col-md-6">
+<div class="col">
 <label>Gastos operativos</label>
-<input name="operativos" type="number" class="form-control">
+<input type="number" name="operativos" class="form-control">
 </div>
 
-<div class="col-md-6">
+<div class="col">
 <label>Comisión</label>
-<input name="comision" type="number" class="form-control">
+<input type="number" name="comision" class="form-control">
 </div>
 
 </div>
 
-<br>
+<div class="row mb-3">
 
-<div class="row">
-
-<div class="col-md-6">
+<div class="col">
 <label>Horas extra</label>
-<input name="horas_extra" type="number" class="form-control">
+<input type="number" name="horas_extra" class="form-control">
 </div>
 
-<div class="col-md-6">
+<div class="col">
 <label>Horas festivo</label>
-<input name="horas_festivo" type="number" class="form-control">
+<input type="number" name="horas_festivo" class="form-control">
 </div>
 
 </div>
 
-<br>
-
+<div class="mb-3">
 <label>Semanas bono</label>
-<input name="bono" type="number" min="0" max="4" class="form-control">
+<input type="number" name="bono" class="form-control">
+</div>
 
-<br>
+<div class="row mb-3">
 
-<div class="row">
-
-<div class="col-md-6">
-
+<div class="col">
 <label>Tipo de carro</label>
-
 <select name="tipo_carro" class="form-control">
+
 <option value="gasolina">Gasolina</option>
 <option value="electrico">Eléctrico</option>
-</select>
 
+</select>
 </div>
 
-<div class="col-md-6">
-
+<div class="col">
 <label>¿Vive lejos?</label>
-
 <select name="vive_lejos" class="form-control">
+
 <option value="no">No</option>
 <option value="si">Sí</option>
+
 </select>
-
 </div>
 
 </div>
 
-<br>
-
+<div class="mb-3">
 <label>Veces que tanqueó gasolina</label>
-<input name="tanqueos" type="number" min="0" class="form-control">
-
-<br>
+<input type="number" name="tanqueos" class="form-control">
+</div>
 
 <button class="btn btn-success w-100">
 Generar colilla PDF
@@ -127,107 +131,7 @@ Generar colilla PDF
 </form>
 
 </div>
-
 </div>
-
-</div>
-
-</body>
-</html></div>
-
-</div>
-
-<br>
-
-<label>Efectivo producido (puedes sumar semanas)</label>
-<input name="efectivo" type="text" class="form-control" placeholder="Ej: 582500 + 490000">
-
-<br>
-
-  <label>Entrega del conductor</label>
-<input name="entrega" type="number" class="form-control" placeholder="Ej: 300000">
-<br>
-
-<div class="row">
-
-<div class="col-md-6">
-<label>Gastos operativos</label>
-<input name="operativos" type="number" class="form-control">
-</div>
-
-<div class="col-md-6">
-<label>Comisión</label>
-<input name="comision" type="number" class="form-control">
-</div>
-
-</div>
-
-<br>
-
-<div class="row">
-
-<div class="col-md-6">
-<label>Horas extra</label>
-<input name="horas_extra" type="number" class="form-control">
-</div>
-
-<div class="col-md-6">
-<label>Horas festivo</label>
-<input name="horas_festivo" type="number" class="form-control">
-</div>
-
-</div>
-
-<br>
-
-<label>Semanas bono</label>
-<input name="bono" type="number" min="0" max="4" class="form-control">
-
-<br>
-
-<div class="row">
-
-<div class="col-md-6">
-
-<label>Tipo de carro</label>
-
-<select name="tipo_carro" class="form-control">
-<option value="gasolina">Gasolina</option>
-<option value="electrico">Eléctrico</option>
-</select>
-
-</div>
-
-<div class="col-md-6">
-
-<label>¿Vive lejos?</label>
-
-<select name="vive_lejos" class="form-control">
-<option value="no">No</option>
-<option value="si">Sí</option>
-</select>
-
-</div>
-
-</div>
-
-<br>
-
-<label>Veces que tanqueó gasolina</label>
-<input name="tanqueos" type="number" min="0" class="form-control">
-
-<br>
-
-<button class="btn btn-success w-100">
-Generar colilla PDF
-</button>
-
-</form>
-
-</div>
-
-</div>
-
 </div>
 
 </body>
