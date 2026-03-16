@@ -101,7 +101,17 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 
     c.setFont("Helvetica", 10)
     c.drawString(50, y, f"Generado el {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+    c.drawString(50, y, f"Entrega conductor: ${entrega:,.0f}")
+y -= 30
 
+if saldo_final > 0:
+    c.drawString(50, y, f"SOBRANTE A FAVOR DEL CONDUCTOR: ${saldo_final:,.0f}")
+
+elif saldo_final < 0:
+    c.drawString(50, y, f"CONDUCTOR QUEDA DEBIENDO: ${abs(saldo_final):,.0f}")
+
+else:
+    c.drawString(50, y, "CONDUCTOR AL DÍA")
     c.save()
 
     buffer.seek(0)
@@ -122,18 +132,19 @@ def index():
         valores = efectivo_texto.split("+")
 
         efectivo = sum(float(v.strip()) for v in valores)
-        operativos = float(request.form["operativos"])
-        comision = float(request.form["comision"])
+        operativos = float(request.form("operativos") or 0)
+        comision = float(request.form("comision") or 0)
 
-        horas_extra = int(request.form["horas_extra"])
-        horas_festivo = int(request.form["horas_festivo"])
+        horas_extra = int(request.form("horas_extra") or 0)
+        horas_festivo = int(request.form("horas_festivo") or 0)
 
-        bono_semanas = int(request.form["bono"])
+        bono_semanas = int(request.form("bono") or 0)
 
         tipo_carro = request.form["tipo_carro"]
         vive_lejos = request.form["vive_lejos"]
 
-        tanqueos = int(request.form["tanqueos"])
+        tanqueos = int(request.form("tanqueos") or 0)
+        entrega = float(request.form.get("entrega") or 0)
 
         gasolina, extras, bono, resultado = calcular_valores(
             efectivo,
