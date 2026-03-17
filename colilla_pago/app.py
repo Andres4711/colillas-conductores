@@ -120,7 +120,7 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 @app.route("/", methods=["GET", "POST"])
 def index():
 
-    # 👉 Si venimos de PDF, limpiar
+    # LIMPIAR DESPUÉS DE PDF
     if session.pop("limpiar", False):
         return render_template("index.html", resultado=None, form={})
 
@@ -176,7 +176,7 @@ def index():
             "saldo_final": saldo_final
         }
 
-        # 👉 GENERAR PDF + REDIRECT (limpia todo)
+        # GENERAR PDF + REDIRECT REAL
         if "generar_pdf" in request.form:
 
             pdf = generar_pdf(
@@ -193,15 +193,31 @@ def index():
                 saldo_final
             )
 
-            session["limpiar"] = True
+            session["pdf_data"] = pdf.getvalue()
+            session["pdf_name"] = f"Colilla_{nombre}.pdf"
 
-            return send_file(
-                pdf,
-                download_name=f"Colilla_{nombre}.pdf",
-                as_attachment=True
-            )
+            return redirect(url_for("descargar_pdf"))
 
     return render_template("index.html", resultado=resultado_data, form=form_data)
+
+
+# RUTA PARA DESCARGAR Y LIMPIAR
+@app.route("/descargar_pdf")
+def descargar_pdf():
+
+    pdf_data = session.pop("pdf_data", None)
+    pdf_name = session.pop("pdf_name", "colilla.pdf")
+
+    if not pdf_data:
+        return redirect(url_for("index"))
+
+    session["limpiar"] = True
+
+    return send_file(
+        io.BytesIO(pdf_data),
+        download_name=pdf_name,
+        as_attachment=True
+    )
 
 
 if __name__ == "__main__":
