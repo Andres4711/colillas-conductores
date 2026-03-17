@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Colilla de pago conductores</title>
+<title>Colilla de pago</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-body { background:#f4f4f4; }
-.container { margin-top:40px; max-width:700px; }
-.card { box-shadow:0px 4px 10px rgba(0,0,0,0.1); }
-</style>
+<script>
+function limpiarFormulario() {
+    document.getElementById("formulario").reset();
+}
+</script>
 
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="container">
-<div class="card">
+<div class="container mt-5">
+<div class="card shadow">
 
 <div class="card-header bg-dark text-white">
 <h4>Colilla de pago conductores</h4>
@@ -24,107 +24,55 @@ body { background:#f4f4f4; }
 
 <div class="card-body">
 
-<form method="POST">
+<form method="POST" id="formulario">
 
-<div class="row mb-3">
-<div class="col">
-<label>Nombre</label>
-<input type="text" name="nombre" class="form-control" value="{{ form.get('nombre', '') }}">
-</div>
+<input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2" value="{{ form.get('nombre','') }}">
+<input type="number" name="id" placeholder="ID" class="form-control mb-2" value="{{ form.get('id','') }}">
 
-<div class="col">
-<label>ID</label>
-<input type="number" name="id" class="form-control" value="{{ form.get('id', '') }}">
-</div>
-</div>
+<input type="text" name="efectivo" placeholder="Efectivo (ej: 20000+30000)" class="form-control mb-2" value="{{ form.get('efectivo','') }}">
+<input type="number" name="entrega" placeholder="Entrega conductor" class="form-control mb-2" value="{{ form.get('entrega','') }}">
 
-<div class="mb-3">
-<label>Efectivo producido</label>
-<input type="text" name="efectivo" class="form-control" value="{{ form.get('efectivo', '') }}">
-</div>
+<input type="number" name="operativos" placeholder="Gastos operativos" class="form-control mb-2" value="{{ form.get('operativos','') }}">
+<input type="number" name="comision" placeholder="Comisión" class="form-control mb-2" value="{{ form.get('comision','') }}">
 
-<div class="mb-3">
-<label>Entrega del conductor</label>
-<input type="number" name="entrega" class="form-control" value="{{ form.get('entrega', '') }}">
-</div>
+<input type="number" name="horas_extra" placeholder="Horas extra" class="form-control mb-2" value="{{ form.get('horas_extra','') }}">
+<input type="number" name="horas_festivo" placeholder="Horas festivo" class="form-control mb-2" value="{{ form.get('horas_festivo','') }}">
 
-<div class="row mb-3">
-<div class="col">
-<label>Gastos operativos</label>
-<input type="number" name="operativos" class="form-control" value="{{ form.get('operativos', '') }}">
-</div>
+<input type="number" name="bono" placeholder="Semanas bono" class="form-control mb-2" value="{{ form.get('bono','') }}">
 
-<div class="col">
-<label>Comisión</label>
-<input type="number" name="comision" class="form-control" value="{{ form.get('comision', '') }}">
-</div>
-</div>
-
-<div class="row mb-3">
-<div class="col">
-<label>Horas extra</label>
-<input type="number" name="horas_extra" class="form-control" value="{{ form.get('horas_extra', '') }}">
-</div>
-
-<div class="col">
-<label>Horas festivo</label>
-<input type="number" name="horas_festivo" class="form-control" value="{{ form.get('horas_festivo', '') }}">
-</div>
-</div>
-
-<div class="mb-3">
-<label>Semanas bono</label>
-<input type="number" name="bono" class="form-control" value="{{ form.get('bono', '') }}">
-</div>
-
-<div class="row mb-3">
-<div class="col">
-<label>Tipo de carro</label>
-<select name="tipo_carro" class="form-control">
-<option value="gasolina" {% if form.get('tipo_carro') == "gasolina" %}selected{% endif %}>Gasolina</option>
-<option value="electrico" {% if form.get('tipo_carro') == "electrico" %}selected{% endif %}>Eléctrico</option>
+<select name="tipo_carro" class="form-control mb-2">
+<option value="gasolina">Gasolina</option>
+<option value="electrico">Eléctrico</option>
 </select>
-</div>
 
-<div class="col">
-<label>¿Vive lejos?</label>
-<select name="vive_lejos" class="form-control">
-<option value="no" {% if form.get('vive_lejos') == "no" %}selected{% endif %}>No</option>
-<option value="si" {% if form.get('vive_lejos') == "si" %}selected{% endif %}>Sí</option>
+<select name="vive_lejos" class="form-control mb-2">
+<option value="no">No vive lejos</option>
+<option value="si">Vive lejos</option>
 </select>
-</div>
-</div>
 
-<div class="mb-3">
-<label>Veces que tanqueó gasolina</label>
-<input type="number" name="tanqueos" class="form-control" value="{{ form.get('tanqueos', '') }}">
-</div>
+<input type="number" name="tanqueos" placeholder="Veces tanqueó" class="form-control mb-3" value="{{ form.get('tanqueos','') }}">
 
 <button class="btn btn-primary w-100 mb-2">Calcular</button>
-<button class="btn btn-success w-100" name="generar_pdf">Generar colilla PDF</button>
+
+<button type="submit" name="generar_pdf" onclick="setTimeout(limpiarFormulario, 500);" class="btn btn-success w-100">
+Generar PDF
+</button>
 
 </form>
 
 {% if resultado %}
-
-<div class="alert alert-info mt-4">
-<h5>Resultado</h5>
-
-<p><strong>Debe entregar:</strong> ${{ resultado.resultado | round(0) }}</p>
-<p><strong>Entregó:</strong> ${{ resultado.entrega | round(0) }}</p>
+<div class="alert alert-info mt-3">
+<p><strong>Debe entregar:</strong> ${{ resultado.resultado }}</p>
+<p><strong>Entregó:</strong> ${{ resultado.entrega }}</p>
 
 {% if resultado.saldo_final > 0 %}
-<p style="color:green;"><strong>Sobrante:</strong> ${{ resultado.saldo_final | round(0) }}</p>
-
+<p style="color:green;">Sobrante: ${{ resultado.saldo_final }}</p>
 {% elif resultado.saldo_final < 0 %}
-<p style="color:red;"><strong>Debe:</strong> ${{ (resultado.saldo_final * -1) | round(0) }}</p>
-
+<p style="color:red;">Debe: ${{ resultado.saldo_final * -1 }}</p>
 {% else %}
-<p style="color:blue;"><strong>Al día</strong></p>
+<p style="color:blue;">Al día</p>
 {% endif %}
-
 </div>
-
 {% endif %}
 
 </div>
