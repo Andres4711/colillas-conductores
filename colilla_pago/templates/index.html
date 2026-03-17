@@ -29,75 +29,75 @@ body { background:#f4f4f4; }
 <div class="row mb-3">
 <div class="col">
 <label>Nombre</label>
-<input type="text" name="nombre" class="form-control" value="{{ form.nombre }}">
+<input type="text" name="nombre" class="form-control" value="{{ form.get('nombre', '') }}">
 </div>
 
 <div class="col">
 <label>ID</label>
-<input type="number" name="id" class="form-control" value="{{ form.id }}">
+<input type="number" name="id" class="form-control" value="{{ form.get('id', '') }}">
 </div>
 </div>
 
 <div class="mb-3">
 <label>Efectivo producido</label>
-<input type="text" name="efectivo" class="form-control" value="{{ form.efectivo }}">
+<input type="text" name="efectivo" class="form-control" value="{{ form.get('efectivo', '') }}">
 </div>
 
 <div class="mb-3">
 <label>Entrega del conductor</label>
-<input type="number" name="entrega" class="form-control" value="{{ form.entrega }}">
+<input type="number" name="entrega" class="form-control" value="{{ form.get('entrega', '') }}">
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Gastos operativos</label>
-<input type="number" name="operativos" class="form-control" value="{{ form.operativos }}">
+<input type="number" name="operativos" class="form-control" value="{{ form.get('operativos', '') }}">
 </div>
 
 <div class="col">
 <label>Comisión</label>
-<input type="number" name="comision" class="form-control" value="{{ form.comision }}">
+<input type="number" name="comision" class="form-control" value="{{ form.get('comision', '') }}">
 </div>
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Horas extra</label>
-<input type="number" name="horas_extra" class="form-control" value="{{ form.horas_extra }}">
+<input type="number" name="horas_extra" class="form-control" value="{{ form.get('horas_extra', '') }}">
 </div>
 
 <div class="col">
 <label>Horas festivo</label>
-<input type="number" name="horas_festivo" class="form-control" value="{{ form.horas_festivo }}">
+<input type="number" name="horas_festivo" class="form-control" value="{{ form.get('horas_festivo', '') }}">
 </div>
 </div>
 
 <div class="mb-3">
 <label>Semanas bono</label>
-<input type="number" name="bono" class="form-control" value="{{ form.bono }}">
+<input type="number" name="bono" class="form-control" value="{{ form.get('bono', '') }}">
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Tipo de carro</label>
 <select name="tipo_carro" class="form-control">
-<option value="gasolina" {% if form.tipo_carro == "gasolina" %}selected{% endif %}>Gasolina</option>
-<option value="electrico" {% if form.tipo_carro == "electrico" %}selected{% endif %}>Eléctrico</option>
+<option value="gasolina" {% if form.get('tipo_carro') == "gasolina" %}selected{% endif %}>Gasolina</option>
+<option value="electrico" {% if form.get('tipo_carro') == "electrico" %}selected{% endif %}>Eléctrico</option>
 </select>
 </div>
 
 <div class="col">
 <label>¿Vive lejos?</label>
 <select name="vive_lejos" class="form-control">
-<option value="no" {% if form.vive_lejos == "no" %}selected{% endif %}>No</option>
-<option value="si" {% if form.vive_lejos == "si" %}selected{% endif %}>Sí</option>
+<option value="no" {% if form.get('vive_lejos') == "no" %}selected{% endif %}>No</option>
+<option value="si" {% if form.get('vive_lejos') == "si" %}selected{% endif %}>Sí</option>
 </select>
 </div>
 </div>
 
 <div class="mb-3">
 <label>Veces que tanqueó gasolina</label>
-<input type="number" name="tanqueos" class="form-control" value="{{ form.tanqueos }}">
+<input type="number" name="tanqueos" class="form-control" value="{{ form.get('tanqueos', '') }}">
 </div>
 
 <button class="btn btn-primary w-100 mb-2">Calcular</button>
