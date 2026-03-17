@@ -16,7 +16,6 @@ body { background:#f4f4f4; }
 <body>
 
 <div class="container">
-
 <div class="card">
 
 <div class="card-header bg-dark text-white">
@@ -30,75 +29,75 @@ body { background:#f4f4f4; }
 <div class="row mb-3">
 <div class="col">
 <label>Nombre</label>
-<input type="text" name="nombre" class="form-control" required>
+<input type="text" name="nombre" class="form-control" value="{{ form.nombre }}">
 </div>
 
 <div class="col">
 <label>ID</label>
-<input type="number" name="id" class="form-control" required>
+<input type="number" name="id" class="form-control" value="{{ form.id }}">
 </div>
 </div>
 
 <div class="mb-3">
 <label>Efectivo producido</label>
-<input type="text" name="efectivo" class="form-control" placeholder="Ej: 582500 + 490000">
+<input type="text" name="efectivo" class="form-control" value="{{ form.efectivo }}">
 </div>
 
 <div class="mb-3">
 <label>Entrega del conductor</label>
-<input type="number" name="entrega" class="form-control">
+<input type="number" name="entrega" class="form-control" value="{{ form.entrega }}">
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Gastos operativos</label>
-<input type="number" name="operativos" class="form-control">
+<input type="number" name="operativos" class="form-control" value="{{ form.operativos }}">
 </div>
 
 <div class="col">
 <label>Comisión</label>
-<input type="number" name="comision" class="form-control">
+<input type="number" name="comision" class="form-control" value="{{ form.comision }}">
 </div>
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Horas extra</label>
-<input type="number" name="horas_extra" class="form-control">
+<input type="number" name="horas_extra" class="form-control" value="{{ form.horas_extra }}">
 </div>
 
 <div class="col">
 <label>Horas festivo</label>
-<input type="number" name="horas_festivo" class="form-control">
+<input type="number" name="horas_festivo" class="form-control" value="{{ form.horas_festivo }}">
 </div>
 </div>
 
 <div class="mb-3">
 <label>Semanas bono</label>
-<input type="number" name="bono" class="form-control">
+<input type="number" name="bono" class="form-control" value="{{ form.bono }}">
 </div>
 
 <div class="row mb-3">
 <div class="col">
 <label>Tipo de carro</label>
 <select name="tipo_carro" class="form-control">
-<option value="gasolina">Gasolina</option>
-<option value="electrico">Eléctrico</option>
+<option value="gasolina" {% if form.tipo_carro == "gasolina" %}selected{% endif %}>Gasolina</option>
+<option value="electrico" {% if form.tipo_carro == "electrico" %}selected{% endif %}>Eléctrico</option>
 </select>
 </div>
 
 <div class="col">
 <label>¿Vive lejos?</label>
 <select name="vive_lejos" class="form-control">
-<option value="no">No</option>
-<option value="si">Sí</option>
+<option value="no" {% if form.vive_lejos == "no" %}selected{% endif %}>No</option>
+<option value="si" {% if form.vive_lejos == "si" %}selected{% endif %}>Sí</option>
 </select>
 </div>
 </div>
 
 <div class="mb-3">
 <label>Veces que tanqueó gasolina</label>
-<input type="number" name="tanqueos" class="form-control">
+<input type="number" name="tanqueos" class="form-control" value="{{ form.tanqueos }}">
 </div>
 
 <button class="btn btn-primary w-100 mb-2">Calcular</button>
@@ -109,7 +108,6 @@ body { background:#f4f4f4; }
 {% if resultado %}
 
 <div class="alert alert-info mt-4">
-
 <h5>Resultado</h5>
 
 <p><strong>Debe entregar:</strong> ${{ resultado.resultado | round(0) }}</p>
