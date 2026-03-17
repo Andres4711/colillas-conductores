@@ -120,8 +120,11 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 def index():
 
     resultado_data = None
+    form_data = {}
 
     if request.method == "POST":
+
+        form_data = request.form.to_dict()
 
         nombre = request.form.get("nombre")
         id = request.form.get("id")
@@ -190,7 +193,7 @@ def index():
                 as_attachment=True
             )
 
-    return render_template("index.html", resultado=resultado_data)
+    return render_template("index.html", resultado=resultado_data, form=form_data)
 
 
 if __name__ == "__main__":
