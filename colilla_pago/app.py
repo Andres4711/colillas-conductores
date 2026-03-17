@@ -20,10 +20,7 @@ def calcular_valores(efectivo, operativos, comision, horas_extra, horas_festivo,
     if tipo_carro == "electrico":
         gasolina = 0
     else:
-        if vive_lejos == "si":
-            gasolina = tanqueos * VALOR_GASOLINA_LEJOS
-        else:
-            gasolina = tanqueos * VALOR_GASOLINA
+        gasolina = tanqueos * (VALOR_GASOLINA_LEJOS if vive_lejos == "si" else VALOR_GASOLINA)
 
     extras_normal = horas_extra * VALOR_HORA_EXTRA
     extras_festivo = horas_festivo * (VALOR_HORA_EXTRA * 1.75)
@@ -114,7 +111,6 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
     c.drawString(50, y, f"Generado el {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
     c.save()
-
     buffer.seek(0)
 
     return buffer
@@ -123,10 +119,12 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 @app.route("/", methods=["GET", "POST"])
 def index():
 
+    resultado_data = None
+
     if request.method == "POST":
 
         nombre = request.form.get("nombre")
-        id = int(request.form.get("id"))
+        id = request.form.get("id")
 
         efectivo_texto = request.form.get("efectivo", "0")
 
@@ -164,27 +162,35 @@ def index():
 
         saldo_final = entrega - resultado
 
-        pdf = generar_pdf(
-            nombre,
-            id,
-            efectivo,
-            gasolina,
-            operativos,
-            comision,
-            extras,
-            bono,
-            resultado,
-            entrega,
-            saldo_final
-        )
+        resultado_data = {
+            "resultado": resultado,
+            "entrega": entrega,
+            "saldo_final": saldo_final
+        }
 
-        return send_file(
-            pdf,
-            download_name=f"Colilla_{nombre}.pdf",
-            as_attachment=True
-        )
+        if "generar_pdf" in request.form:
 
-    return render_template("index.html")
+            pdf = generar_pdf(
+                nombre,
+                id,
+                efectivo,
+                gasolina,
+                operativos,
+                comision,
+                extras,
+                bono,
+                resultado,
+                entrega,
+                saldo_final
+            )
+
+            return send_file(
+                pdf,
+                download_name=f"Colilla_{nombre}.pdf",
+                as_attachment=True
+            )
+
+    return render_template("index.html", resultado=resultado_data)
 
 
 if __name__ == "__main__":
