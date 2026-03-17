@@ -5,12 +5,6 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<script>
-function limpiarFormulario() {
-    document.getElementById("formulario").reset();
-}
-</script>
-
 </head>
 
 <body class="bg-light">
@@ -24,7 +18,7 @@ function limpiarFormulario() {
 
 <div class="card-body">
 
-<form method="POST" id="formulario">
+<form method="POST">
 
 <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2" value="{{ form.get('nombre','') }}">
 <input type="number" name="id" placeholder="ID" class="form-control mb-2" value="{{ form.get('id','') }}">
@@ -55,8 +49,12 @@ function limpiarFormulario() {
 <button class="btn btn-primary w-100 mb-2">Calcular</button>
 
 <button type="submit" name="generar_pdf" class="btn btn-success w-100">
-    Generar PDF
+Generar PDF
 </button>
+
+<a href="/" class="btn btn-secondary w-100 mt-2">
+Nuevo conductor / Limpiar
+</a>
 
 </form>
 
