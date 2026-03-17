@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, session
+from flask import Flask, render_template, request, send_file, make_response
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
@@ -6,7 +6,6 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-app.secret_key = "clave_secreta_pro"
 
 VALOR_GASOLINA = 65000
 VALOR_GASOLINA_LEJOS = 70000
@@ -120,10 +119,6 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 @app.route("/", methods=["GET", "POST"])
 def index():
 
-    # LIMPIAR DESPUÉS DE PDF
-    if session.pop("limpiar", False):
-        return render_template("index.html", resultado=None, form={})
-
     resultado_data = None
     form_data = {}
 
@@ -135,12 +130,8 @@ def index():
         id = request.form.get("id")
 
         efectivo_texto = request.form.get("efectivo", "0")
-
-        if efectivo_texto.strip() == "":
-            efectivo = 0
-        else:
-            valores = efectivo_texto.split("+")
-            efectivo = sum(float(v.strip() or 0) for v in valores)
+        valores = efectivo_texto.split("+")
+        efectivo = sum(float(v.strip() or 0) for v in valores)
 
         operativos = float(request.form.get("operativos") or 0)
         comision = float(request.form.get("comision") or 0)
@@ -176,7 +167,7 @@ def index():
             "saldo_final": saldo_final
         }
 
-        # GENERAR PDF + REDIRECT REAL
+        # GENERAR PDF DIRECTO
         if "generar_pdf" in request.form:
 
             pdf = generar_pdf(
@@ -193,31 +184,18 @@ def index():
                 saldo_final
             )
 
-            session["pdf_data"] = pdf.getvalue()
-            session["pdf_name"] = f"Colilla_{nombre}.pdf"
+            response = make_response(send_file(
+                pdf,
+                download_name=f"Colilla_{nombre}.pdf",
+                as_attachment=True
+            ))
 
-            return redirect(url_for("descargar_pdf"))
+            # LIMPIAR FORM AUTOMÁTICAMENTE
+            response.headers["X-Limpiar-Formulario"] = "true"
+
+            return response
 
     return render_template("index.html", resultado=resultado_data, form=form_data)
-
-
-# RUTA PARA DESCARGAR Y LIMPIAR
-@app.route("/descargar_pdf")
-def descargar_pdf():
-
-    pdf_data = session.pop("pdf_data", None)
-    pdf_name = session.pop("pdf_name", "colilla.pdf")
-
-    if not pdf_data:
-        return redirect(url_for("index"))
-
-    session["limpiar"] = True
-
-    return send_file(
-        io.BytesIO(pdf_data),
-        download_name=pdf_name,
-        as_attachment=True
-    )
 
 
 if __name__ == "__main__":
