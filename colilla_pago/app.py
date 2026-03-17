@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from flask import Flask, render_template, request, send_file
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
@@ -96,65 +96,65 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 
     c.save()
     buffer.seek(0)
+
     return buffer
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
 
-    if request.method == "POST":
+    # SIEMPRE LIMPIO AL RECARGAR
+    if request.method == "GET":
+        return render_template("index.html", resultado=None, form={})
 
-        nombre = request.form.get("nombre")
-        id = request.form.get("id")
+    form_data = request.form.to_dict()
 
-        efectivo = sum(float(v.strip() or 0) for v in request.form.get("efectivo", "0").split("+"))
+    nombre = request.form.get("nombre")
+    id = request.form.get("id")
 
-        operativos = float(request.form.get("operativos") or 0)
-        comision = float(request.form.get("comision") or 0)
+    efectivo = sum(float(v.strip() or 0) for v in request.form.get("efectivo", "0").split("+"))
 
-        horas_extra = int(request.form.get("horas_extra") or 0)
-        horas_festivo = int(request.form.get("horas_festivo") or 0)
+    operativos = float(request.form.get("operativos") or 0)
+    comision = float(request.form.get("comision") or 0)
 
-        bono = int(request.form.get("bono") or 0)
+    horas_extra = int(request.form.get("horas_extra") or 0)
+    horas_festivo = int(request.form.get("horas_festivo") or 0)
 
-        tipo_carro = request.form.get("tipo_carro")
-        vive_lejos = request.form.get("vive_lejos")
-        tanqueos = int(request.form.get("tanqueos") or 0)
+    bono = int(request.form.get("bono") or 0)
 
-        entrega = float(request.form.get("entrega") or 0)
+    tipo_carro = request.form.get("tipo_carro")
+    vive_lejos = request.form.get("vive_lejos")
+    tanqueos = int(request.form.get("tanqueos") or 0)
 
-        gasolina, extras, bono, resultado = calcular_valores(
-            efectivo, operativos, comision, horas_extra,
-            horas_festivo, bono, tipo_carro, vive_lejos, tanqueos
+    entrega = float(request.form.get("entrega") or 0)
+
+    gasolina, extras, bono, resultado = calcular_valores(
+        efectivo, operativos, comision, horas_extra,
+        horas_festivo, bono, tipo_carro, vive_lejos, tanqueos
+    )
+
+    saldo_final = entrega - resultado
+
+    # GENERAR PDF
+    if "generar_pdf" in request.form:
+
+        pdf = generar_pdf(
+            nombre, id, efectivo, gasolina, operativos,
+            comision, extras, bono, resultado, entrega, saldo_final
         )
 
-        saldo_final = entrega - resultado
+        return send_file(
+            pdf,
+            download_name=f"Colilla_{nombre}.pdf",
+            as_attachment=True
+        )
 
-        if "generar_pdf" in request.form:
-
-            pdf = generar_pdf(
-                nombre, id, efectivo, gasolina, operativos,
-                comision, extras, bono, resultado, entrega, saldo_final
-            )
-
-            response = send_file(
-                pdf,
-                download_name=f"Colilla_{nombre}.pdf",
-                as_attachment=True
-            )
-
-            
-            response.headers["Refresh"] = "0; url=/"
-
-            return response
-
-        return render_template("index.html", resultado={
-            "resultado": resultado,
-            "entrega": entrega,
-            "saldo_final": saldo_final
-        }, form=request.form)
-
-    return render_template("index.html", resultado=None, form={})
+    # CALCULAR
+    return render_template("index.html", resultado={
+        "resultado": resultado,
+        "entrega": entrega,
+        "saldo_final": saldo_final
+    }, form=form_data)
 
 
 if __name__ == "__main__":
