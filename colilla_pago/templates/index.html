@@ -6,20 +6,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-
-body{
-background:#f4f4f4;
-}
-
-.container{
-margin-top:40px;
-max-width:700px;
-}
-
-.card{
-box-shadow:0px 4px 10px rgba(0,0,0,0.1);
-}
-
+body { background:#f4f4f4; }
+.container { margin-top:40px; max-width:700px; }
+.card { box-shadow:0px 4px 10px rgba(0,0,0,0.1); }
 </style>
 
 </head>
@@ -39,7 +28,6 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 <form method="POST">
 
 <div class="row mb-3">
-
 <div class="col">
 <label>Nombre</label>
 <input type="text" name="nombre" class="form-control" required>
@@ -49,11 +37,10 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 <label>ID</label>
 <input type="number" name="id" class="form-control" required>
 </div>
-
 </div>
 
 <div class="mb-3">
-<label>Efectivo producido (puedes sumar semanas)</label>
+<label>Efectivo producido</label>
 <input type="text" name="efectivo" class="form-control" placeholder="Ej: 582500 + 490000">
 </div>
 
@@ -63,7 +50,6 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 </div>
 
 <div class="row mb-3">
-
 <div class="col">
 <label>Gastos operativos</label>
 <input type="number" name="operativos" class="form-control">
@@ -73,11 +59,9 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 <label>Comisión</label>
 <input type="number" name="comision" class="form-control">
 </div>
-
 </div>
 
 <div class="row mb-3">
-
 <div class="col">
 <label>Horas extra</label>
 <input type="number" name="horas_extra" class="form-control">
@@ -87,7 +71,6 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 <label>Horas festivo</label>
 <input type="number" name="horas_festivo" class="form-control">
 </div>
-
 </div>
 
 <div class="mb-3">
@@ -96,27 +79,21 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 </div>
 
 <div class="row mb-3">
-
 <div class="col">
 <label>Tipo de carro</label>
 <select name="tipo_carro" class="form-control">
-
 <option value="gasolina">Gasolina</option>
 <option value="electrico">Eléctrico</option>
-
 </select>
 </div>
 
 <div class="col">
 <label>¿Vive lejos?</label>
 <select name="vive_lejos" class="form-control">
-
 <option value="no">No</option>
 <option value="si">Sí</option>
-
 </select>
 </div>
-
 </div>
 
 <div class="mb-3">
@@ -124,11 +101,33 @@ box-shadow:0px 4px 10px rgba(0,0,0,0.1);
 <input type="number" name="tanqueos" class="form-control">
 </div>
 
-<button class="btn btn-success w-100">
-Generar colilla PDF
-</button>
+<button class="btn btn-primary w-100 mb-2">Calcular</button>
+<button class="btn btn-success w-100" name="generar_pdf">Generar colilla PDF</button>
 
 </form>
+
+{% if resultado %}
+
+<div class="alert alert-info mt-4">
+
+<h5>Resultado</h5>
+
+<p><strong>Debe entregar:</strong> ${{ resultado.resultado | round(0) }}</p>
+<p><strong>Entregó:</strong> ${{ resultado.entrega | round(0) }}</p>
+
+{% if resultado.saldo_final > 0 %}
+<p style="color:green;"><strong>Sobrante:</strong> ${{ resultado.saldo_final | round(0) }}</p>
+
+{% elif resultado.saldo_final < 0 %}
+<p style="color:red;"><strong>Debe:</strong> ${{ (resultado.saldo_final * -1) | round(0) }}</p>
+
+{% else %}
+<p style="color:blue;"><strong>Al día</strong></p>
+{% endif %}
+
+</div>
+
+{% endif %}
 
 </div>
 </div>
