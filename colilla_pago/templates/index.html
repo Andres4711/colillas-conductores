@@ -18,7 +18,7 @@
 
 <div class="card-body">
 
-<form method="POST">
+<form method="POST" autocomplete="off">
 
 <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2" value="{{ form.get('nombre','') }}">
 <input type="number" name="id" placeholder="ID" class="form-control mb-2" value="{{ form.get('id','') }}">
@@ -77,5 +77,22 @@ Nuevo conductor / Limpiar
 </div>
 </div>
 
+<script>
+window.addEventListener("pageshow", function(event) {
+    try {
+        const nav = performance.getEntriesByType("navigation");
+        const isReload = nav.length > 0 && nav[0].type === "reload";
+
+        if (event.persisted || isReload) {
+            const form = document.querySelector("form");
+            if (form) form.reset();
+        }
+    } catch (e) {
+        const form = document.querySelector("form");
+        if (form) form.reset();
+    }
+});
+</script>
+  
 </body>
 </html>
