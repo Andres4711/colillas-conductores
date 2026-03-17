@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, redirect, url_for, session
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
+app.secret_key = "clave_secreta_pro"
 
 VALOR_GASOLINA = 65000
 VALOR_GASOLINA_LEJOS = 70000
@@ -119,6 +120,10 @@ def generar_pdf(nombre, id, efectivo, gasolina, operativos, comision, extras, bo
 @app.route("/", methods=["GET", "POST"])
 def index():
 
+    # 👉 Si venimos de PDF, limpiar
+    if session.pop("limpiar", False):
+        return render_template("index.html", resultado=None, form={})
+
     resultado_data = None
     form_data = {}
 
@@ -171,6 +176,7 @@ def index():
             "saldo_final": saldo_final
         }
 
+        # 👉 GENERAR PDF + REDIRECT (limpia todo)
         if "generar_pdf" in request.form:
 
             pdf = generar_pdf(
@@ -186,6 +192,8 @@ def index():
                 entrega,
                 saldo_final
             )
+
+            session["limpiar"] = True
 
             return send_file(
                 pdf,
