@@ -13,7 +13,7 @@
 <div class="card shadow">
 
 <div class="card-header bg-dark text-white">
-<h4>Colilla de pago conductores</h4>
+<h4 class="text-center">Colilla de pago conductores</h4>
 </div>
 
 <div class="card-body">
@@ -34,14 +34,16 @@
 
 <input type="number" name="bono" placeholder="Semanas bono" class="form-control mb-2" value="{{ form.get('bono','') }}">
 
+<!-- SELECT TIPO CARRO -->
 <select name="tipo_carro" class="form-control mb-2">
-<option value="gasolina">Gasolina</option>
-<option value="electrico">Eléctrico</option>
+<option value="gasolina" {% if form.get('tipo_carro') == 'gasolina' %}selected{% endif %}>Gasolina</option>
+<option value="electrico" {% if form.get('tipo_carro') == 'electrico' %}selected{% endif %}>Eléctrico</option>
 </select>
 
+<!-- SELECT VIVE LEJOS -->
 <select name="vive_lejos" class="form-control mb-2">
-<option value="no">No vive lejos</option>
-<option value="si">Vive lejos</option>
+<option value="no" {% if form.get('vive_lejos') == 'no' %}selected{% endif %}>No vive lejos</option>
+<option value="si" {% if form.get('vive_lejos') == 'si' %}selected{% endif %}>Vive lejos</option>
 </select>
 
 <input type="number" name="tanqueos" placeholder="Veces tanqueó" class="form-control mb-3" value="{{ form.get('tanqueos','') }}">
@@ -60,13 +62,13 @@ Limpiar formulario
 
 {% if resultado %}
 <div class="alert alert-info mt-3">
-<p><strong>Debe entregar:</strong> ${{ resultado.resultado }}</p>
-<p><strong>Entregó:</strong> ${{ resultado.entrega }}</p>
+<p><strong>Debe entregar:</strong> ${{ "{:,.0f}".format(resultado.resultado) }}</p>
+<p><strong>Entregó:</strong> ${{ "{:,.0f}".format(resultado.entrega) }}</p>
 
 {% if resultado.saldo_final > 0 %}
-<p style="color:green;">Sobrante: ${{ resultado.saldo_final }}</p>
+<p style="color:green;">Sobrante: ${{ "{:,.0f}".format(resultado.saldo_final) }}</p>
 {% elif resultado.saldo_final < 0 %}
-<p style="color:red;">Debe: ${{ resultado.saldo_final * -1 }}</p>
+<p style="color:red;">Debe: ${{ "{:,.0f}".format(resultado.saldo_final * -1) }}</p>
 {% else %}
 <p style="color:blue;">Al día</p>
 {% endif %}
@@ -77,6 +79,7 @@ Limpiar formulario
 </div>
 </div>
 
+<!-- LIMPIAR AL RECARGAR -->
 <script>
 window.addEventListener("pageshow", function(event) {
     try {
@@ -94,10 +97,10 @@ window.addEventListener("pageshow", function(event) {
 });
 </script>
 
-    <script>
+<!-- GENERAR PDF -->
+<script>
 function generarPDF() {
     const form = document.querySelector("form");
-
     const formData = new FormData(form);
     formData.append("generar_pdf", "1");
 
@@ -107,20 +110,18 @@ function generarPDF() {
     })
     .then(response => response.blob())
     .then(blob => {
-        
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "colilla.pdf";
+        a.download = "Colilla_" + (formData.get("nombre") || "sin_nombre") + ".pdf";
         document.body.appendChild(a);
         a.click();
         a.remove();
 
         form.reset();
-
     });
 }
 </script>
-  
+
 </body>
 </html>
