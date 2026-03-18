@@ -12,10 +12,8 @@ def index():
     if request.method == "POST":
         form = request.form.to_dict()
 
-        # 🔥 AQUÍ USAS EL NUEVO CALCULO
         resultado = calcular_valores(form)
 
-        # 🔥 AQUÍ GENERAS EL PDF
         if "generar_pdf" in request.form:
             pdf = generar_pdf(
                 form.get("nombre"),
