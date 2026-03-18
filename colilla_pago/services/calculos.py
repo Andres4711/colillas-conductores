@@ -4,16 +4,15 @@ VALOR_HORA_EXTRA = 8233
 
 def calcular_valores(form):
 
-    
+    # EFECTIVO (permite 20000+30000 o 20,000)
     efectivo_str = form.get("efectivo", "0")
 
     efectivo = sum(
-        int(v.strip() or 0)
+        int(v.replace(",", "").strip() or 0) if v.replace(",", "").strip().isdigit() else 0
         for v in efectivo_str.split("+")
         if v.strip() != ""
     )
 
-    
     operativos = int(form.get("operativos", 0) or 0)
     comision = int(form.get("comision", 0) or 0)
     horas_extra = int(form.get("horas_extra", 0) or 0)
@@ -25,7 +24,7 @@ def calcular_valores(form):
     tipo_carro = form.get("tipo_carro")
     vive_lejos = form.get("vive_lejos")
 
-    
+    # GASOLINA
     if tipo_carro == "electrico":
         gasolina = 0
     else:
@@ -33,22 +32,21 @@ def calcular_valores(form):
             VALOR_GASOLINA_LEJOS if vive_lejos == "si" else VALOR_GASOLINA
         )
 
-    
+    # EXTRAS
     extras_normal = horas_extra * VALOR_HORA_EXTRA
     extras_festivo = horas_festivo * (VALOR_HORA_EXTRA * 1.75)
     extras_total = int(extras_normal + extras_festivo)
 
-    
+    # BONO
     bono = bono_semanas * 65000
 
-    
+    # CÁLCULOS
     sobrante = efectivo - gasolina - operativos
     ganancias = comision + extras_total + bono
 
     resultado = sobrante - ganancias
     saldo_final = entrega - resultado
 
-    
     return {
         "efectivo": efectivo,
         "extras": extras_total,
