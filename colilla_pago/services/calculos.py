@@ -2,24 +2,29 @@ VALOR_GASOLINA = 65000
 VALOR_GASOLINA_LEJOS = 70000
 VALOR_HORA_EXTRA = 8233
 
+def to_int(valor):
+    try:
+        return int(valor)
+    except (TypeError, ValueError):
+        return 0
+
 def calcular_valores(form):
 
-    # EFECTIVO (permite 20000+30000 o 20,000)
     efectivo_str = form.get("efectivo", "0")
 
     efectivo = sum(
-        int(v.replace(",", "").strip() or 0) if v.replace(",", "").strip().isdigit() else 0
+        to_int(v.strip())
         for v in efectivo_str.split("+")
         if v.strip() != ""
     )
 
-    operativos = int(form.get("operativos", 0) or 0)
-    comision = int(form.get("comision", 0) or 0)
-    horas_extra = int(form.get("horas_extra", 0) or 0)
-    horas_festivo = int(form.get("horas_festivo", 0) or 0)
-    bono_semanas = int(form.get("bono", 0) or 0)
-    tanqueos = int(form.get("tanqueos", 0) or 0)
-    entrega = int(form.get("entrega", 0) or 0)
+    operativos = to_int(form.get("operativos"))
+    comision = to_int(form.get("comision"))
+    horas_extra = to_int(form.get("horas_extra"))
+    horas_festivo = to_int(form.get("horas_festivo"))
+    bono_semanas = to_int(form.get("bono"))
+    tanqueos = to_int(form.get("tanqueos"))
+    entrega = to_int(form.get("entrega"))
 
     tipo_carro = form.get("tipo_carro")
     vive_lejos = form.get("vive_lejos")
