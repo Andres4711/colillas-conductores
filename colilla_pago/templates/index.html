@@ -2,97 +2,111 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colilla Wheelgrin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card { border-radius: 15px; overflow: hidden; }
+        .bg-dark { background-color: #1a1a1a !important; }
+        .form-label { font-size: 0.85rem; font-weight: 600; color: #555; }
+    </style>
 </head>
 <body class="bg-light">
+
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-dark text-white text-center">
-                        <h4>Liquidación Diaria</h4>
+            <div class="col-md-7">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-dark text-white text-center py-3">
+                        <h4 class="mb-0">Liquidación Diaria Conductores</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form id="pagoForm" method="POST" autocomplete="off">
-                            <div class="row g-2">
-                                <div class="col-8">
-                                    <input type="text" name="nombre" placeholder="Nombre Conductor" class="form-control" value="{{ form.get('nombre','') }}" required>
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label">Nombre del Conductor</label>
+                                    <input type="text" name="nombre" class="form-control" value="{{ form.get('nombre','') }}" required>
                                 </div>
-                                <div class="col-4">
-                                    <input type="number" name="id" placeholder="Cédula" class="form-control" value="{{ form.get('id','') }}" required>
+                                <div class="col-md-4">
+                                    <label class="form-label">Cédula/ID</label>
+                                    <input type="number" name="id" class="form-control" value="{{ form.get('id','') }}" required>
                                 </div>
-                                <div class="col-12">
-                                    <label class="small fw-bold">Efectivo (puedes usar suma 20+10):</label>
-                                    <input type="text" name="efectivo" class="form-control" value="{{ form.get('efectivo','') }}">
+                                
+                                <div class="col-md-12">
+                                    <label class="form-label">Efectivo Reportado (Suma: 20000+15000)</label>
+                                    <input type="text" name="efectivo" class="form-control border-primary" value="{{ form.get('efectivo','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Comisión:</label>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Comisión</label>
                                     <input type="number" name="comision" class="form-control" value="{{ form.get('comision','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Gastos Op:</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Gastos Operativos</label>
                                     <input type="number" name="operativos" class="form-control" value="{{ form.get('operativos','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Horas Extra:</label>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Horas Extra (Normales)</label>
                                     <input type="number" name="horas_extra" class="form-control" value="{{ form.get('horas_extra','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Horas Festivo:</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Horas Festivo</label>
                                     <input type="number" name="horas_festivo" class="form-control" value="{{ form.get('horas_festivo','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Semanas Bono:</label>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Bono (Semanas)</label>
                                     <input type="number" name="bono" class="form-control" value="{{ form.get('bono','') }}">
                                 </div>
-                                <div class="col-6">
-                                    <label class="small">Tanqueos:</label>
+                                <div class="col-md-4">
+                                    <label class="form-label">Cant. Tanqueos</label>
                                     <input type="number" name="tanqueos" class="form-control" value="{{ form.get('tanqueos','') }}">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-4">
+                                    <label class="form-label">Tipo Carro</label>
                                     <select name="tipo_carro" class="form-select">
-                                        <option value="gasolina" {% if form.get('tipo_carro') == 'gasolina' %}selected{% endif %}>Carro Gasolina</option>
-                                        <option value="electrico" {% if form.get('tipo_carro') == 'electrico' %}selected{% endif %}>Carro Eléctrico</option>
+                                        <option value="gasolina" {% if form.get('tipo_carro') == 'gasolina' %}selected{% endif %}>Gasolina</option>
+                                        <option value="electrico" {% if form.get('tipo_carro') == 'electrico' %}selected{% endif %}>Eléctrico</option>
                                     </select>
                                 </div>
-                                <div class="col-6">
+
+                                <div class="col-md-6">
+                                    <label class="form-label">¿Vive lejos?</label>
                                     <select name="vive_lejos" class="form-select">
-                                        <option value="no" {% if form.get('vive_lejos') == 'no' %}selected{% endif %}>Cerca</option>
-                                        <option value="si" {% if form.get('vive_lejos') == 'si' %}selected{% endif %}>Vive Lejos</option>
+                                        <option value="no" {% if form.get('vive_lejos') == 'no' %}selected{% endif %}>No</option>
+                                        <option value="si" {% if form.get('vive_lejos') == 'si' %}selected{% endif %}>Sí</option>
                                     </select>
                                 </div>
-                                <div class="col-12 mt-3">
-                                    <label class="fw-bold">¿Cuánto entregó físicamente?</label>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-primary">Entrega Física Efectivo</label>
                                     <input type="number" name="entrega" class="form-control border-primary" value="{{ form.get('entrega','') }}">
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mt-4">Calcular Valores</button>
-                            
-                            <button type="button" onclick="descargarPDF()" class="btn btn-success w-100 mt-2">
-                                Descargar PDF y Limpiar
-                            </button>
-                            <a href="/" class="btn btn-link w-100 text-secondary mt-1">Resetear todo</a>
+                            <div class="mt-4 d-grid gap-2">
+                                <button type="submit" class="btn btn-dark py-2">Calcular Resultados</button>
+                                <button type="button" onclick="descargarPDF()" class="btn btn-success py-2">Descargar PDF y Limpiar</button>
+                                <a href="/" class="btn btn-outline-secondary btn-sm">Limpiar Formulario</a>
+                            </div>
                         </form>
 
                         {% if resultado %}
-                        <div id="seccionResultado" class="mt-4 p-3 border rounded {% if resultado.resultado >= 0 %}bg-light{% else %}bg-warning-subtle{% endif %}">
-                            {% if resultado.resultado > 0 %}
-                                <h5 class="text-primary">Debe entregar: ${{ "{:,.0f}".format(resultado.resultado) }}</h5>
-                            {% else %}
-                                <h5 class="text-danger">Empresa le debe: ${{ "{:,.0f}".format(resultado.resultado | abs) }}</h5>
-                            {% endif %}
-                            
-                            <hr>
-                            <div class="small">
-                                {% if resultado.saldo_final > 0 %}
-                                    <p class="text-success fw-bold">Sobrante: ${{ "{:,.0f}".format(resultado.saldo_final) }}</p>
-                                {% elif resultado.saldo_final < 0 %}
-                                    <p class="text-danger fw-bold">Faltante: ${{ "{:,.0f}".format(resultado.saldo_final | abs) }}</p>
+                        <div id="seccionResultado" class="mt-4 alert {% if resultado.resultado >= 0 %}alert-primary{% else %}alert-warning{% endif %} border-0 shadow-sm">
+                            <h5 class="alert-heading text-center">
+                                {% if resultado.resultado > 0 %}
+                                    Debe entregar: <strong>${{ "{:,.0f}".format(resultado.resultado) }}</strong>
                                 {% else %}
-                                    <p class="text-info fw-bold">Cuentas exactas</p>
+                                    Empresa le debe: <strong>${{ "{:,.0f}".format(resultado.resultado | abs) }}</strong>
                                 {% endif %}
+                            </h5>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span>Balance final:</span>
+                                <span class="fw-bold {% if resultado.saldo_final >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                    {{ "Sobrante" if resultado.saldo_final >= 0 else "Faltante" }}: 
+                                    ${{ "{:,.0f}".format(resultado.saldo_final | abs) }}
+                                </span>
                             </div>
                         </div>
                         {% endif %}
@@ -106,23 +120,47 @@
     function descargarPDF() {
         const form = document.getElementById("pagoForm");
         const formData = new FormData(form);
+        
+        if (!formData.get("nombre")) {
+            alert("Por favor ingrese el nombre del conductor");
+            return;
+        }
+
         formData.append("generar_pdf", "1");
+        document.body.style.cursor = 'wait';
 
         fetch("/", { method: "POST", body: formData })
-        .then(res => res.blob())
+        .then(res => {
+            if (!res.ok) throw new Error("Error en el servidor");
+            return res.blob();
+        })
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `Colilla_${formData.get("nombre") || 'SinNombre'}.pdf`;
-            a.click();
+            const nombreArchivo = (formData.get("nombre") || "SinNombre").replace(/\s+/g, '_');
+            a.download = `Colilla_${nombreArchivo}.pdf`;
             
-            // Limpiar formulario y ocultar resultado visual
-            form.reset();
-            const resArea = document.getElementById("seccionResultado");
-            if(resArea) resArea.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+            
+            // LIMPIEZA TOTAL CON RETRASO
+            setTimeout(() => {
+                form.reset();
+                const resArea = document.getElementById("seccionResultado");
+                if(resArea) resArea.style.display = 'none';
+                document.body.style.cursor = 'default';
+                window.location.href = "/"; // Recarga para limpiar estado de Flask
+            }, 800);
+        })
+        .catch(err => {
+            document.body.style.cursor = 'default';
+            alert("Hubo un error: " + err.message);
         });
     }
     </script>
 </body>
-</html>
+                                        </html>
+                                        
