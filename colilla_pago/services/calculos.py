@@ -4,20 +4,19 @@ VALOR_HORA_EXTRA = 8233
 
 def to_int(valor):
     try:
+        # Eliminamos puntos o comas que el usuario pueda escribir por error
+        if isinstance(valor, str):
+            valor = valor.replace('.', '').replace(',', '')
         return int(valor)
     except (TypeError, ValueError):
         return 0
 
 def calcular_valores(form):
-
+    # Procesar sumas en el campo efectivo (ej: 20000+10000)
     efectivo_str = form.get("efectivo", "0")
+    efectivo = sum(to_int(v.strip()) for v in efectivo_str.split("+") if v.strip())
 
-    efectivo = sum(
-        to_int(v.strip())
-        for v in efectivo_str.split("+")
-        if v.strip() != ""
-    )
-
+    # Captura de datos
     operativos = to_int(form.get("operativos"))
     comision = to_int(form.get("comision"))
     horas_extra = to_int(form.get("horas_extra"))
@@ -25,32 +24,30 @@ def calcular_valores(form):
     bono_semanas = to_int(form.get("bono"))
     tanqueos = to_int(form.get("tanqueos"))
     entrega = to_int(form.get("entrega"))
-
     tipo_carro = form.get("tipo_carro")
     vive_lejos = form.get("vive_lejos")
 
-    # GASOLINA
-    if tipo_carro == "electrico":
-        gasolina = 0
-    else:
-        gasolina = tanqueos * (
-            VALOR_GASOLINA_LEJOS if vive_lejos == "si" else VALOR_GASOLINA
-        )
+    # LÓGICA DE GASOLINA
+    gasolina = 0
+    if tipo_carro != "electrico":
+        precio = VALOR_GASOLINA_LEJOS if vive_lejos == "si" else VALOR_GASOLINA
+        gasolina = tanqueos * precio
 
-    # EXTRAS
-    extras_normal = horas_extra * VALOR_HORA_EXTRA
-    extras_festivo = horas_festivo * (VALOR_HORA_EXTRA * 1.75)
-    extras_total = int(extras_normal + extras_festivo)
-
-    # BONO
+    # LÓGICA DE EXTRAS Y BONOS
+    extras_total = int((horas_extra * VALOR_HORA_EXTRA) + (horas_festivo * VALOR_HORA_EXTRA * 1.75))
     bono = bono_semanas * 65000
 
-    # CÁLCULOS
-    sobrante = efectivo - gasolina - operativos
-    ganancias = comision + extras_total + bono
+    # --- EL CÁLCULO CLAVE ---
+    # 1. ¿Cuánto quedó de lo que el carro produjo después de gastos?
+    sobrante_produccion = efectivo - gasolina - operativos
+    
+    # 2. ¿Cuánto se ganó el conductor (su sueldo)?
+    total_ganado_conductor = comision + extras_total + bono
 
-    resultado = sobrante - ganancias
-    saldo_final = entrega - resultado
+    # 3. Diferencia: 
+    # Positivo: El conductor tiene dinero de la empresa.
+    # Negativo: La empresa le debe al conductor.
+    resultado_liquidacion = sobrante_produccion - total_ganado_conductor
 
     return {
         "efectivo": efectivo,
@@ -59,7 +56,8 @@ def calcular_valores(form):
         "gasolina": gasolina,
         "operativos": operativos,
         "comision": comision,
-        "resultado": resultado,
+        "resultado": resultado_liquidacion,
         "entrega": entrega,
-        "saldo_final": saldo_final
+        "saldo_final": entrega - resultado_liquidacion
     }
+    
