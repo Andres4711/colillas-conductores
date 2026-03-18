@@ -93,6 +93,35 @@ window.addEventListener("pageshow", function(event) {
     }
 });
 </script>
+
+    <script>
+function generarPDF() {
+    const form = document.querySelector("form");
+
+    const formData = new FormData(form);
+    formData.append("generar_pdf", "1");
+
+    fetch("/", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "colilla.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        form.reset();
+
+        window.location.href = "/";
+    });
+}
+</script>
   
 </body>
 </html>
