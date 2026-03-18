@@ -44,7 +44,6 @@ def generar_pdf(nombre, cedula, datos):
     c.setFillColorRGB(0, 0, 0)
     c.setFont("Helvetica", 10)
     
-    # Desglose para el PDF
     conceptos = [
         ("Efectivo total reportado (+)", datos['efectivo']),
         ("Gasto de Gasolina (-)", datos['gasolina']),
@@ -64,12 +63,10 @@ def generar_pdf(nombre, cedula, datos):
         c.drawRightString(540, y+5, money(valor))
         y -= 18
 
-    # --- NUEVO: RESUMEN DE HORAS (Detalle técnico) ---
+    # --- RESUMEN DE HORAS (Nota al pie de tabla) ---
     y -= 15
     c.setFont("Helvetica-BoldOblique", 9)
     c.setFillColorRGB(0.4, 0.4, 0.4)
-    # Extraemos las horas del diccionario si las pasas, 
-    # por ahora usamos el total de extras como referencia
     c.drawString(60, y, f"* Incluye el pago de horas extra y recargos festivos calculados.")
     
     # --- TOTALES FINALES ---
@@ -82,9 +79,9 @@ def generar_pdf(nombre, cedula, datos):
     c.setFont("Helvetica-Bold", 12)
     c.setFillColorRGB(0, 0, 0)
     if res > 0:
-        [span_3](start_span)c.drawString(50, y, "SALDO A FAVOR DE EMPRESA (ENTREGAR):")[span_3](end_span)
+        c.drawString(50, y, "SALDO A FAVOR DE EMPRESA (ENTREGAR):")
     else:
-        [span_4](start_span)c.drawString(50, y, "SALDO A FAVOR DEL CONDUCTOR (PAGAR):")[span_4](end_span)
+        c.drawString(50, y, "SALDO A FAVOR DEL CONDUCTOR (PAGAR):")
     c.drawRightString(540, y, money(res))
 
     y -= 35
@@ -93,7 +90,7 @@ def generar_pdf(nombre, cedula, datos):
     c.roundRect(50, y-40, 500, 60, 5, stroke=1, fill=0)
     
     c.setFont("Helvetica", 10)
-    [span_5](start_span)[span_6](start_span)c.drawString(65, y+5, "Dinero entregado físicamente:")[span_5](end_span)[span_6](end_span)
+    c.drawString(65, y+5, "Dinero entregado físicamente:")
     c.drawRightString(535, y+5, money(datos['entrega']))
     
     saldo = datos['saldo_final']
@@ -101,14 +98,24 @@ def generar_pdf(nombre, cedula, datos):
     if saldo > 0:
         c.setFillColorRGB(0, 0.4, 0) # Verde
         c.setFont("Helvetica-Bold", 11)
-        [span_7](start_span)c.drawString(65, y, f"RESULTADO: SOBRANTE DE {money(saldo)}")[span_7](end_span)
+        c.drawString(65, y, f"RESULTADO: SOBRANTE DE {money(saldo)}")
     elif saldo < 0:
         c.setFillColorRGB(0.7, 0, 0) # Rojo
         c.setFont("Helvetica-Bold", 11)
-        [span_8](start_span)c.drawString(65, y, f"RESULTADO: FALTANTE DE {money(saldo)}")[span_8](end_span)
+        c.drawString(65, y, f"RESULTADO: FALTANTE DE {money(saldo)}")
     else:
         c.setFillColorRGB(0, 0, 0.7)
         c.drawString(65, y, "RESULTADO: CUENTAS AL DÍA")
+
+    # Espacio para firmas
+    y -= 80
+    c.setLineWidth(0.5)
+    c.setFillColorRGB(0, 0, 0)
+    c.line(70, y, 220, y)
+    c.line(380, y, 530, y)
+    c.setFont("Helvetica", 9)
+    c.drawCentredString(145, y-12, "Firma Conductor")
+    c.drawCentredString(455, y-12, "Firma Administrador")
 
     c.save()
     return file_path
