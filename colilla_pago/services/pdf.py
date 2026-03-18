@@ -19,7 +19,7 @@ def generar_pdf(nombre, cedula, datos):
     c.drawString(160, 740, "WHEELGRIN S.A.S.")
     c.setFont("Helvetica", 10)
     c.drawString(160, 725, "NIT: 901216088-9")
-    c.drawRightString(550, 740, "SOPORTE DE PAGO")
+    c.drawRightString(550, 740, "COLILLA DE PAGO")
     c.drawRightString(550, 725, datetime.now().strftime("%d/%m/%Y %H:%M"))
 
     y = 680
