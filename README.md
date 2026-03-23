@@ -17,7 +17,7 @@ Aplicación web desarrollada en **Python (Flask)** para la gestión y cálculo d
 - **Lenguaje:** Python 3.12
 - **Framework Web:** Flask
 - **Generación de PDF:** FPDF
-- **Despliegue:** Azure App Service via GitHub Actions
+- **Despliegue:** Render App Service via GitHub Actions
 
 ## Estructura del Proyecto
 
