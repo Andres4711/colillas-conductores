@@ -2,112 +2,133 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Colilla Wheelgrin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .card { border-radius: 15px; overflow: hidden; }
+        /* Optimización para Safari y dispositivos móviles */
+        body { 
+            background-color: #f8f9fa; 
+            -webkit-font-smoothing: antialiased;
+        }
+        .card { border-radius: 15px; overflow: hidden; border: none; }
         .bg-dark { background-color: #1a1a1a !important; }
-        .form-label { font-size: 0.85rem; font-weight: 600; color: #555; }
+        
+        /* Evita estilos nativos de iOS que deforman los botones */
+        input, button, select {
+            -webkit-appearance: none;
+            border-radius: 8px !important;
+        }
+
+        .form-label { 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: #444; 
+            margin-bottom: 4px;
+        }
+
+        .btn-success { background-color: #28a745; border: none; }
+        .btn-dark { background-color: #1a1a1a; border: none; }
+        
+        /* Ajuste para que el teclado no tape el formulario en iPhone */
+        @media (max-width: 768px) {
+            .container { padding-top: 20px; }
+            .card-body { padding: 20px; }
+        }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <div class="container py-5">
+    <div class="container py-4">
         <div class="row justify-content-center">
-            <div class="col-md-7">
-                <div class="card shadow border-0">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
                     <div class="card-header bg-dark text-white text-center py-3">
-                        <h4 class="mb-0">Liquidación Diaria Conductores</h4>
+                        <h4 class="mb-0">Liquidación Diaria Wheelgrin</h4>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body">
                         <form id="pagoForm" method="POST" autocomplete="off">
                             <div class="row g-3">
-                                <div class="col-md-8">
+                                <div class="col-12">
                                     <label class="form-label">Nombre del Conductor</label>
-                                    <input type="text" name="nombre" class="form-control" value="{{ form.get('nombre','') }}" required>
+                                    <input type="text" name="nombre" class="form-control" placeholder="Nombre completo" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Cédula/ID</label>
-                                    <input type="number" name="id" class="form-control" value="{{ form.get('id','') }}" required>
+                                <div class="col-12">
+                                    <label class="form-label">Cédula / ID</label>
+                                    <input type="number" name="id" class="form-control" inputmode="numeric" required>
                                 </div>
                                 
-                                <div class="col-md-12">
-                                    <label class="form-label">Efectivo Reportado (Suma: 20000+15000)</label>
-                                    <input type="text" name="efectivo" class="form-control border-primary" value="{{ form.get('efectivo','') }}">
+                                <div class="col-12">
+                                    <label class="form-label text-primary">Efectivo Reportado (Suma con +)</label>
+                                    <input type="text" name="efectivo" class="form-control border-primary" placeholder="Ej: 500000+250000">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Comisión</label>
-                                    <input type="text" name="comision" class="form-control" placeholder="Ej: 50000+20000" value="{{ form.get('comision','') }}">
+                                    <label class="form-label">Comisión (Suma con +)</label>
+                                    <input type="text" name="comision" class="form-control" placeholder="Ej: 20000+15000">
                                 </div>
+                                
                                 <div class="col-md-6">
-                                    <label class="form-label">Gastos Operativos</label>
-                                    <input type="number" name="operativos" class="form-control" value="{{ form.get('operativos','') }}">
+                                    <label class="form-label">Otros Gastos Operativos</label>
+                                    <input type="number" name="operativos" class="form-control" inputmode="numeric">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Horas Extra (Normales)</label>
-                                    <input type="number" name="horas_extra" class="form-control" value="{{ form.get('horas_extra','') }}">
+                                    <input type="number" name="horas_extra" step="any" class="form-control" inputmode="decimal" placeholder="0.0">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Horas Festivo</label>
-                                    <input type="number" name="horas_festivo" class="form-control" value="{{ form.get('horas_festivo','') }}">
+                                    <input type="number" name="horas_festivo" step="any" class="form-control" inputmode="decimal" placeholder="0.0">
                                 </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label">Bono (Semanas)</label>
-                                    <input type="number" name="bono" class="form-control" value="{{ form.get('bono','') }}">
+                                <div class="col-md-6">
+                                    <label class="form-label">Cantidad Tanqueos</label>
+                                    <input type="number" name="tanqueos" step="any" class="form-control" inputmode="decimal" placeholder="Ej: 1.5">
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Cant. Tanqueos</label>
-                                    <input type="number" name="tanqueos" class="form-control" value="{{ form.get('tanqueos','') }}">
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Bonos (Semanas)</label>
+                                    <input type="number" name="bono" class="form-control" min="0" max="4">
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Tipo Carro</label>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Tipo de Vehículo</label>
                                     <select name="tipo_carro" class="form-select">
-                                        <option value="gasolina" {% if form.get('tipo_carro') == 'gasolina' %}selected{% endif %}>Gasolina</option>
-                                        <option value="electrico" {% if form.get('tipo_carro') == 'electrico' %}selected{% endif %}>Eléctrico</option>
+                                        <option value="gasolina">Gasolina</option>
+                                        <option value="electrico">Eléctrico</option>
                                     </select>
                                 </div>
-
                                 <div class="col-md-6">
                                     <label class="form-label">¿Vive lejos?</label>
                                     <select name="vive_lejos" class="form-select">
-                                        <option value="no" {% if form.get('vive_lejos') == 'no' %}selected{% endif %}>No</option>
-                                        <option value="si" {% if form.get('vive_lejos') == 'si' %}selected{% endif %}>Sí</option>
+                                        <option value="no">No</option>
+                                        <option value="si">Sí (Tanqueo $70k)</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold text-primary">Entrega Física Efectivo</label>
-                                    <input type="number" name="entrega" class="form-control border-primary" value="{{ form.get('entrega','') }}">
+
+                                <div class="col-12">
+                                    <label class="form-label fw-bold text-success">Efectivo Entregado Físicamente</label>
+                                    <input type="number" name="entrega" class="form-control border-success" inputmode="numeric">
                                 </div>
                             </div>
 
                             <div class="mt-4 d-grid gap-2">
                                 <button type="submit" class="btn btn-dark py-2">Calcular Resultados</button>
                                 <button type="button" onclick="descargarPDF()" class="btn btn-success py-2">Descargar PDF y Limpiar</button>
-                                <a href="/" class="btn btn-outline-secondary btn-sm">Limpiar Formulario</a>
+                                <a href="/" class="btn btn-link text-secondary btn-sm">Limpiar Formulario</a>
                             </div>
                         </form>
 
                         {% if resultado %}
-                        <div id="seccionResultado" class="mt-4 alert {% if resultado.resultado >= 0 %}alert-primary{% else %}alert-warning{% endif %} border-0 shadow-sm">
-                            <h5 class="alert-heading text-center">
+                        <div id="seccionResultado" class="mt-4 alert {% if resultado.resultado >= 0 %}alert-primary{% else %}alert-warning{% endif %} shadow-sm border-0">
+                            <h5 class="alert-heading text-center mb-0">
                                 {% if resultado.resultado > 0 %}
                                     Debe entregar: <strong>${{ "{:,.0f}".format(resultado.resultado) }}</strong>
                                 {% else %}
-                                    Empresa le debe: <strong>${{ "{:,.0f}".format(resultado.resultado | abs) }}</strong>
+                                    Empresa debe pagar: <strong>${{ "{:,.0f}".format(resultado.resultado | abs) }}</strong>
                                 {% endif %}
                             </h5>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <span>Balance final:</span>
-                                <span class="fw-bold {% if resultado.saldo_final >= 0 %}text-success{% else %}text-danger{% endif %}">
-                                    {{ "Sobrante" if resultado.saldo_final >= 0 else "Faltante" }}: 
-                                    ${{ "{:,.0f}".format(resultado.saldo_final | abs) }}
-                                </span>
-                            </div>
                         </div>
                         {% endif %}
                     </div>
@@ -137,30 +158,30 @@
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
+            a.style.display = 'none';
             a.href = url;
-            const nombreArchivo = (formData.get("nombre") || "SinNombre").replace(/\s+/g, '_');
-            a.download = `Colilla_${nombreArchivo}.pdf`;
+            
+            // Nombre del archivo para Safari/Chrome
+            const nombreConductor = (formData.get("nombre") || "SinNombre").replace(/\s+/g, '_');
+            a.download = `Colilla_${nombreConductor}.pdf`;
             
             document.body.appendChild(a);
             a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
             
-            // LIMPIEZA TOTAL CON RETRASO
+            // Delay para asegurar que Safari procese la descarga antes de limpiar
             setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                a.remove();
                 form.reset();
-                const resArea = document.getElementById("seccionResultado");
-                if(resArea) resArea.style.display = 'none';
-                document.body.style.cursor = 'default';
-                window.location.href = "/"; // Recarga para limpiar estado de Flask
-            }, 800);
+                window.location.href = "/"; 
+            }, 1000);
         })
         .catch(err => {
             document.body.style.cursor = 'default';
-            alert("Hubo un error: " + err.message);
+            alert("Error: " + err.message);
         });
     }
     </script>
 </body>
-                                        </html>
-                                        
+</html>
+    
