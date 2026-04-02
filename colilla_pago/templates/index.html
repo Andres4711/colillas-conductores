@@ -138,49 +138,85 @@
     </div>
 
     <script>
-    function descargarPDF() {
-        const form = document.getElementById("pagoForm");
-        const formData = new FormData(form);
-        
-        if (!formData.get("nombre")) {
-            alert("Por favor ingrese el nombre del conductor");
-            return;
+// 1. RESPALDO PARA SAFARI: Guardar datos al hacer clic en "Calcular"
+document.getElementById("pagoForm").addEventListener("submit", function() {
+    const formData = new FormData(this);
+    for (let [key, value] of formData.entries()) {
+        // No guardamos el PDF generado, solo los datos de los campos
+        if (key !== 'generar_pdf') {
+            localStorage.setItem(key, value);
         }
-
-        formData.append("generar_pdf", "1");
-        document.body.style.cursor = 'wait';
-
-        fetch("/", { method: "POST", body: formData })
-        .then(res => {
-            if (!res.ok) throw new Error("Error en el servidor");
-            return res.blob();
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = 'none';
-            a.href = url;
-            
-            // Nombre del archivo para Safari/Chrome
-            const nombreConductor = (formData.get("nombre") || "SinNombre").replace(/\s+/g, '_');
-            a.download = `Colilla_${nombreConductor}.pdf`;
-            
-            document.body.appendChild(a);
-            a.click();
-            
-            // Delay para asegurar que Safari procese la descarga antes de limpiar
-            setTimeout(() => {
-                window.URL.revokeObjectURL(url);
-                a.remove();
-                form.reset();
-                window.location.href = "/"; 
-            }, 1000);
-        })
-        .catch(err => {
-            document.body.style.cursor = 'default';
-            alert("Error: " + err.message);
-        });
     }
+});
+
+// 2. RECUPERACIÓN: Al cargar la página, si hay resultados, rellenar los campos
+window.addEventListener('load', () => {
+    const form = document.getElementById("pagoForm");
+    const hayResultado = document.getElementById("seccionResultado");
+
+    if (hayResultado) {
+        // Solo rellenamos si acabamos de calcular algo
+        for (let i = 0; i < form.elements.length; i++) {
+            const el = form.elements[i];
+            if (el.name && localStorage.getItem(el.name)) {
+                el.value = localStorage.getItem(el.name);
+            }
+        }
+    } else {
+        // Si entramos a la página de cero (sin resultados), limpiamos todo
+        localStorage.clear();
+    }
+});
+
+// 3. DESCARGA Y LIMPIEZA TOTAL
+function descargarPDF() {
+    const form = document.getElementById("pagoForm");
+    const formData = new FormData(form);
+    
+    if (!formData.get("nombre")) {
+        alert("Por favor ingrese el nombre del conductor");
+        return;
+    }
+
+    formData.append("generar_pdf", "1");
+    document.body.style.cursor = 'wait';
+
+    fetch("/", { method: "POST", body: formData })
+    .then(res => {
+        if (!res.ok) throw new Error("Error en el servidor");
+        return res.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = 'none';
+        a.href = url;
+        
+        const nombreConductor = (formData.get("nombre") || "SinNombre").replace(/\s+/g, '_');
+        a.download = `Colilla_${nombreConductor}.pdf`;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        // Esperamos un momento para que Safari complete la descarga
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            a.remove();
+            
+            // AHORA SÍ: Limpiamos la memoria y el formulario
+            localStorage.clear(); 
+            form.reset();
+            document.body.style.cursor = 'default';
+            
+            // Refrescamos para quedar en blanco para el siguiente conductor
+            window.location.href = "/"; 
+        }, 1200);
+    })
+    .catch(err => {
+        document.body.style.cursor = 'default';
+        alert("Error al generar PDF: " + err.message);
+    });
+}
     </script>
 </body>
 </html>
